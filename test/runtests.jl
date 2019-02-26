@@ -3,28 +3,58 @@ using Main.Tau
 VERSION < v"0.7.0-beta2.199" ? using Base.Test : using Test
 
 @testset "self-identity" begin
-    @test isa(tau, Irrational)
-    @test τ == τ
-    @test τ == tau
+
+    @testset "tau" begin
+        @test isa(tau, Irrational)
+        @test τ == τ
+        @test τ === τ
+        @test τ == tau
+        @test τ === tau
+        @test τ == 1τ
+        @test τ !== 1τ
+        @test τ == big(tau)
+        @test τ !== big(tau)
+    end
+
+    # Also test pi self-identity, for 100% test coverage
+    @testset "pi" begin
+        @test π == π
+        @test π === π
+        @test π == pi
+        @test π === pi
+        @test π == 1π
+        @test π !== 1π
+        @test π == big(pi)
+        @test π !== big(pi)
+    end
+
 end
 
 @testset "tau vs. 2pi" begin
 
     @testset "symbols" begin
-        @test τ ≠ 2π # tau is Irrational, can't be equal to an AbstractFloat
-        @test 2π ≠ τ
-        @test π ≠ τ/2
-        @test τ/2 ≠ π
+        @test τ == 2π
+        @test 2π == τ
+        @test π == τ/2
+        @test τ/2 == π
     end
 
     @testset "ascii" begin
-        @test tau ≠ 2*pi # tau is Irrational, can't be equal to an AbstractFloat
-        @test 2*pi ≠ tau
-        @test pi ≠ tau/2 # pi is Irrational, can't be equal to an AbstractFloat
-        @test tau/2 ≠ pi
+        @test tau == 2*pi
+        @test 2*pi == tau
+        @test pi == tau/2
+        @test tau/2 == pi
+    end
+
+    @testset "arithmetic operations" begin
+        @test pi == 0.5 * tau
+        @test tau == pi + pi
+        @test pi == tau - pi
+        @test 4pi == 2tau
     end
 
     @testset "explicit type conversions" begin
+        @test tau == 2 * BigFloat(pi)
         @test Float32(tau) == 2 * Float32(pi)
         @test Float64(Float32(tau)) == Float64(2 * Float32(pi))
         @test BigFloat(tau) == 2 * BigFloat(pi)
